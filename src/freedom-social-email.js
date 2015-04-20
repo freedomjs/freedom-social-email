@@ -1,7 +1,9 @@
-/* globals freedom */
+/* globals freedom,require */
 var EmailSocialProvider = function (dispatchEvents, args) {
   'use strict';
   // TODO process args to setup emailjs/browserbox
+  var browserbox = require('browserbox');
+  var emailjs = require('emailjs');
 };
 
 
@@ -12,6 +14,7 @@ var EmailSocialProvider = function (dispatchEvents, args) {
  * @param {Object} loginOpts Setup information about the desired network.
  */
 EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
+  'use strict';
   continuation(undefined, {
     errcode: 'UNKNOWN',
     message: 'No login function defined'
@@ -24,6 +27,7 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
  * @method clearCachedCredentials
  */
 EmailSocialProvider.prototype.clearCachedCredentials = function(continuation) {
+  'use strict';
   delete this.credentials;
   continuation();
 };
@@ -43,11 +47,13 @@ EmailSocialProvider.prototype.clearCachedCredentials = function(continuation) {
  *   On failure, rejects with an error code (see above)
  */
 EmailSocialProvider.prototype.getClients = function(continuation) {
+  'use strict';
   continuation(this.vCardStore.getClients());
 };
 
 
 EmailSocialProvider.prototype.getUsers = function(continuation) {
+  'use strict';
   continuation(this.vCardStore.getUsers());
 };
 
@@ -61,6 +67,7 @@ EmailSocialProvider.prototype.getUsers = function(continuation) {
  * @param {Function} continuation Callback after message is sent.
  */
 EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
+  'use strict';
   if (!this.client) {
     this.logger.warn('No client available to send message to ' + to);
     continuation(undefined, {
@@ -69,10 +76,11 @@ EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
     });
     return;
   }
-}
+};
 
 
 EmailSocialProvider.prototype.logout = function(continuation) {
+  'use strict';
   this.status = 'offline';
   this.credentials = null;
   this.lastMessageTimestampMs_ = null;
@@ -98,7 +106,8 @@ EmailSocialProvider.prototype.logout = function(continuation) {
  * @method onMessage
  */
 EmailSocialProvider.prototype.onMessage = function(from, msg) {
-}
+  'use strict';
+};
 
 // TODO other event receiving maybe
 
