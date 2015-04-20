@@ -1,0 +1,27 @@
+{
+  "name": "freedom-social-email",
+  "description": "Email social provider for freedom.js",
+  "version": "0.1.0",
+  "contributors": [
+    "You <your@email.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soycode/freedom-social-email.git"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-connect": "^0.10.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-jshint": "^0.11.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "browserbox": "^0.9.0",
+    "emailjs": "^0.3.15",
+    "freedom": "^0.6.22"
+  }
+}

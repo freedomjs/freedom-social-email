@@ -1,0 +1,11 @@
+{
+  "name": "freedom-social-email",
+  "description": "Email social provider for freedom.js",
+  "app": {
+    "script": "freedom-social-email.js"
+  },
+  "default": "social",
+  "provides": [
+    "social"
+  ]
+}
