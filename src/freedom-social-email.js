@@ -1,20 +1,113 @@
 /* globals freedom */
+var EmailSocialProvider = function (dispatchEvents, args) {
+  'use strict';
+  // TODO process args to setup emailjs/browserbox
+};
+
+
+// TODO implement below methods to satisfy social interface
 /**
- * This is the root module of freedom.js.
- * It runs in an isolated thread with its own namespace.
- * The root module has a special object 'freedom', which
- * is used to provide the interface defined in
- * freedom-module.json.
- **/
-var Counter = function (dispatchEvents, base) {
-  'use strict';
-  this.num = base;
+ * Begin the login view, potentially prompting for credentials.
+ * @method login
+ * @param {Object} loginOpts Setup information about the desired network.
+ */
+EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
+  continuation(undefined, {
+    errcode: 'UNKNOWN',
+    message: 'No login function defined'
+  });
 };
 
-Counter.prototype.click = function (num) {
-  'use strict';
-  this.num += num;
-  return this.num;
+
+/**
+ * Clear any credentials / state in the app.
+ * @method clearCachedCredentials
+ */
+EmailSocialProvider.prototype.clearCachedCredentials = function(continuation) {
+  delete this.credentials;
+  continuation();
 };
 
-freedom().provideSynchronous(Counter);
+
+/**
+ * Returns all the <client_state>s that we've seen so far (from any 'onClientState' event)
+ * Note: this instance's own <client_state> will be somewhere in this list
+ * Use the clientId returned from social.login() to extract your element
+ *
+ * @method getClients
+ * @return {Object} {
+ *    'clientId1': <client_state>,
+ *    'clientId2': <client_state>,
+ *     ...
+ * } List of <client_state>s indexed by clientId
+ *   On failure, rejects with an error code (see above)
+ */
+EmailSocialProvider.prototype.getClients = function(continuation) {
+  continuation(this.vCardStore.getClients());
+};
+
+
+EmailSocialProvider.prototype.getUsers = function(continuation) {
+  continuation(this.vCardStore.getUsers());
+};
+
+
+/**
+ * Sends a message to a user on the network.
+ * If the destination is not specified or invalid, the mssage is dropped.
+ * @method sendMessage
+ * @param {String} to clientId of the device or user to send to.
+ * @param {String} msg The message to send
+ * @param {Function} continuation Callback after message is sent.
+ */
+EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
+  if (!this.client) {
+    this.logger.warn('No client available to send message to ' + to);
+    continuation(undefined, {
+      errcode: 'OFFLINE',
+      message: this.ERRCODE.OFFLINE
+    });
+    return;
+  }
+}
+
+
+EmailSocialProvider.prototype.logout = function(continuation) {
+  this.status = 'offline';
+  this.credentials = null;
+  this.lastMessageTimestampMs_ = null;
+  if (this.pollForDisconnectInterval_) {
+    clearInterval(this.pollForDisconnectInterval_);
+    this.pollForDisconnectInterval_ = null;
+  }
+  if (this.client) {
+    this.client.send(new window.Email.Element('presence', {
+      type: 'unavailable'
+    }));
+    this.client.end();
+    this.client = null;
+  }
+  if (continuation) {
+    continuation();
+  }
+};
+
+
+/**
+ * Handle messages from the Email client.
+ * @method onMessage
+ */
+EmailSocialProvider.prototype.onMessage = function(from, msg) {
+}
+
+// TODO other event receiving maybe
+
+
+// Register provider when in a module context.
+if (typeof freedom !== 'undefined') {
+  if (!freedom.social) {
+    freedom().provideAsynchronous(EmailSocialProvider);
+  } else {
+    freedom.social().provideAsynchronous(EmailSocialProvider);
+  }
+}
