@@ -2,7 +2,12 @@
   "name": "freedom-social-email",
   "description": "Email social provider for freedom.js",
   "app": {
-    "script": "freedom-social-email.js"
+    "script": [
+      "freedom-social-email.js",
+      "browserbox.js",
+      "browserbox-imap.js",
+      "emailjs.js"
+    ]
   },
   "default": "social",
   "provides": [

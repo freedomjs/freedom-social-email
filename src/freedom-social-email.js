@@ -1,11 +1,8 @@
-/* globals freedom,require */
+/* globals freedom,BrowserBox,emailjs */
 var EmailSocialProvider = function (dispatchEvents, args) {
   'use strict';
-  // TODO process args to setup emailjs/browserbox
-  var browserbox = require('browserbox');
-  var emailjs = require('emailjs');
 
-  var this.imap = new browserbox('localhost', 143, {
+  this.imap = new BrowserBox('localhost', 143, {
     auth: {
       user: args.user,
       pass: args.password
@@ -15,7 +12,7 @@ var EmailSocialProvider = function (dispatchEvents, args) {
       version: '0.1.0'
     }
   });
-  var this.smtp = emailjs.server.connect({
+  this.smtp = emailjs.server.connect({
     user:     args.user,
     password: args.password, 
     host:     args.smtphost, 
