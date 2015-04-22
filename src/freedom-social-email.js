@@ -4,6 +4,23 @@ var EmailSocialProvider = function (dispatchEvents, args) {
   // TODO process args to setup emailjs/browserbox
   var browserbox = require('browserbox');
   var emailjs = require('emailjs');
+
+  var this.imap = new browserbox('localhost', 143, {
+    auth: {
+      user: args.user,
+      pass: args.password
+    },
+    id: {
+      name: 'freedom-social-email IMAP client',
+      version: '0.1.0'
+    }
+  });
+  var this.smtp = emailjs.server.connect({
+    user:     args.user,
+    password: args.password, 
+    host:     args.smtphost, 
+    ssl:      true
+  });
 };
 
 
