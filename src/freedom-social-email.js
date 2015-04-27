@@ -29,10 +29,16 @@ var EmailSocialProvider = function (dispatchEvents, args) {
  */
 EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
   'use strict';
-  continuation(undefined, {
-    errcode: 'UNKNOWN',
-    message: 'No login function defined'
-  });
+  // TODO SMTP (doesn't seem to have a separate create/connect option)
+  if (this.imap) {
+    this.imap.connect();
+    continuation();
+  } else {
+    continuation(undefined, {
+      errcode: 'UNKNOWN',
+      message: 'No login function defined'
+    });
+  }
 };
 
 
@@ -42,8 +48,9 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
  */
 EmailSocialProvider.prototype.clearCachedCredentials = function(continuation) {
   'use strict';
-  delete this.credentials;
-  continuation();
+  // TODO SMTP (may just have to override object)
+  this.imap.onclose(continuation);
+  this.imap.close();
 };
 
 
