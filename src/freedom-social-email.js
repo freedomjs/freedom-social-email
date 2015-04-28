@@ -19,7 +19,33 @@ if (typeof global !== 'undefined') {
 var EmailSocialProvider = function (dispatchEvent, credentials) {
   'use strict';
   this.dispatchEvent = dispatchEvent;
-  this.credentials = credentials;  // TODO - better auth, maybe interactive
+  this.credentials = null;
+};
+
+
+/**
+ * Receive credentials from client application.
+ * @method onCredentials
+ * @private
+ * @param {function} continuation call to complete to login promise.
+ * @param {object} msg The authentication message sent by the client.
+ **/
+EmailSocialProvider.prototype.onCredentials = function(continuation, msg) {
+  'use strict';
+  if (msg.cmd && msg.cmd === 'auth') {
+    this.credentials = msg.credentials;
+    this.login(null, continuation);
+  } else if (msg.cmd && msg.cmd === 'error') {
+    continuation(undefined, {
+      errcode: 'LOGIN_FAILEDCONNECTION',
+      message: 'Failed to connect to email provider'
+    });
+  } else {
+    continuation(undefined, {
+      errcode: 'LOGIN_BADCREDENTIALS',
+      message: 'Bad credentials, could not log into email'
+    });
+  }
 };
 
 
@@ -64,7 +90,7 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
  */
 EmailSocialProvider.prototype.clearCachedCredentials = function(continuation) {
   'use strict';
-  delete this.credentials;
+  this.credentials = null;
 };
 
 
