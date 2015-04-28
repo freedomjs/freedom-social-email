@@ -1,27 +1,28 @@
-/* globals freedom,BrowserBox,emailjs */
-var EmailSocialProvider = function (dispatchEvents, args) {
-  'use strict';
+/* globals window:true,freedom:true,BrowserBox,emailjs,global */
 
-  this.imap = new BrowserBox('localhost', 143, {
-    auth: {
-      user: args.user,
-      pass: args.password
-    },
-    id: {
-      name: 'freedom-social-email IMAP client',
-      version: '0.1.0'
-    }
-  });
-  this.smtp = emailjs.server.connect({
-    user:     args.user,
-    password: args.password, 
-    host:     args.smtphost, 
-    ssl:      true
-  });
+/**
+ * Implementation of a Social provider for freedom.js that
+ * uses IMAP/SMTP clients to connect to email servers.
+ **/
+
+// Global declarations for node.js
+if (typeof global !== 'undefined') {
+  if (typeof window === 'undefined') {
+    global.window = {};
+  }
+} else {
+  if (typeof window === 'undefined') {
+    var window = {};
+  }
+}
+
+var EmailSocialProvider = function (dispatchEvent, credentials) {
+  'use strict';
+  this.dispatchEvent = dispatchEvent;
+  this.credentials = credentials;  // TODO - better auth, maybe interactive
 };
 
 
-// TODO implement below methods to satisfy social interface
 /**
  * Begin the login view, potentially prompting for credentials.
  * @method login
@@ -29,7 +30,22 @@ var EmailSocialProvider = function (dispatchEvents, args) {
  */
 EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
   'use strict';
-  // TODO SMTP (doesn't seem to have a separate create/connect option)
+  this.smtp = emailjs.server.connect({
+    user:     this.credentials.user,
+    password: this.credentials.password,
+    host:     this.credentials.smtphost,
+    ssl:      true
+  });
+  this.imap = new BrowserBox('localhost', 143, {
+    auth: {
+      user: this.credentials.user,
+      pass: this.credentials.password
+    },
+    id: {
+      name: 'freedom-social-email IMAP client',
+      version: '0.1.0'
+    }
+  });
   if (this.imap) {
     this.imap.connect();
     continuation();
@@ -48,13 +64,12 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
  */
 EmailSocialProvider.prototype.clearCachedCredentials = function(continuation) {
   'use strict';
-  // TODO SMTP (may just have to override object)
-  this.imap.onclose(continuation);
-  this.imap.close();
+  delete this.credentials;
 };
 
 
 /**
+ * TODO
  * Returns all the <client_state>s that we've seen so far (from any 'onClientState' event)
  * Note: this instance's own <client_state> will be somewhere in this list
  * Use the clientId returned from social.login() to extract your element
@@ -73,6 +88,7 @@ EmailSocialProvider.prototype.getClients = function(continuation) {
 };
 
 
+// TODO
 EmailSocialProvider.prototype.getUsers = function(continuation) {
   'use strict';
   continuation(this.vCardStore.getUsers());
@@ -80,6 +96,7 @@ EmailSocialProvider.prototype.getUsers = function(continuation) {
 
 
 /**
+ * TODO
  * Sends a message to a user on the network.
  * If the destination is not specified or invalid, the mssage is dropped.
  * @method sendMessage
@@ -102,27 +119,14 @@ EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
 
 EmailSocialProvider.prototype.logout = function(continuation) {
   'use strict';
-  this.status = 'offline';
-  this.credentials = null;
-  this.lastMessageTimestampMs_ = null;
-  if (this.pollForDisconnectInterval_) {
-    clearInterval(this.pollForDisconnectInterval_);
-    this.pollForDisconnectInterval_ = null;
-  }
-  if (this.client) {
-    this.client.send(new window.Email.Element('presence', {
-      type: 'unavailable'
-    }));
-    this.client.end();
-    this.client = null;
-  }
-  if (continuation) {
-    continuation();
-  }
+  delete this.smtp;  // No explicit logout method for email.js
+  this.imap.onclose(continuation);
+  this.imap.close();
 };
 
 
 /**
+ * TODO
  * Handle messages from the Email client.
  * @method onMessage
  */
@@ -130,7 +134,7 @@ EmailSocialProvider.prototype.onMessage = function(from, msg) {
   'use strict';
 };
 
-// TODO other event receiving maybe
+// TODO other event receiving maybe, particularly for credentials/auth
 
 
 // Register provider when in a module context.
