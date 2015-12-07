@@ -16,7 +16,7 @@ if (typeof global !== 'undefined') {
   }
 }
 
-var EmailSocialProvider = function (dispatchEvent, credentials) {
+var EmailSocialProvider = function (dispatchEvent) {
   'use strict';
   this.dispatchEvent = dispatchEvent;
   this.credentials = null;
@@ -140,6 +140,12 @@ EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
     });
     return;
   }
+  server.send({
+    text: msg,
+    from: this.credentials.user,
+    to: to,
+    subject: 'freedom-social-email message'
+  }, continuation);
 };
 
 
