@@ -6,7 +6,8 @@
       "freedom-social-email.js",
       "browserbox.js",
       "browserbox-imap.js",
-      "emailjs.js"
+      "smtpclient.js",
+      "smtpclient-response-parser.js"
     ]
   },
   "default": "social",

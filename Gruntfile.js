@@ -32,14 +32,14 @@ module.exports = function(grunt) {
         dest: 'build/',
         expand: true,
         onlyIf: 'modified'
-      }
-    },
-
-    browserify: {
-      emailjs: {
-        files: {
-          'build/emailjs.js': [ require.resolve('emailjs') ]
-        }
+      },
+      smtpclient: {
+        cwd: path.dirname(require.resolve('wo-smtpclient')),
+        src: [ 'smtpclient.js',
+               'smtpclient-response-parser.js' ],
+        dest: 'build/',
+        expand: true,
+        onlyIf: 'modified'
       }
     },
 
@@ -64,7 +64,6 @@ module.exports = function(grunt) {
     clean: ['build/']
   });
 
-  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -72,8 +71,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'jshint',
-    'copy',
-    'browserify:emailjs'
+    'copy'
   ]);
   grunt.registerTask('demo', [
     'build',

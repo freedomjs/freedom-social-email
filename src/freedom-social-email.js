@@ -56,11 +56,15 @@ EmailSocialProvider.prototype.onCredentials = function(continuation, msg) {
  */
 EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
   'use strict';
-  this.smtp = emailjs.server.connect({
-    user:     this.credentials.user,
-    password: this.credentials.password,
-    host:     this.credentials.smtphost,
-    ssl:      true
+  console.log(this.credentials);
+  this.smtp = new SmtpClient(this.credentials.smtphost, 587, {
+    useSecureTransport: true,
+    requireTLS: true,
+    name: 'freedom-social-email SMTP client',
+    auth: {
+      user: this.credentials.user,
+      pass: this.credentials.password
+    },
   });
   this.imap = new BrowserBox(this.credentials.imaphost, 143, {
     auth: {
@@ -132,7 +136,7 @@ EmailSocialProvider.prototype.getUsers = function(continuation) {
  */
 EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
   'use strict';
-  if (!this.client) {
+  if (!this.smtp) {
     this.logger.warn('No client available to send message to ' + to);
     continuation(undefined, {
       errcode: 'OFFLINE',
@@ -140,12 +144,35 @@ EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
     });
     return;
   }
-  server.send({
-    text: msg,
-    from: this.credentials.user,
-    to: to,
-    subject: 'freedom-social-email message'
-  }, continuation);
+
+  var sending = false;
+  this.smtp.onidle = function () {
+    if (sending) {
+      return;
+    }
+    sending = true;
+    // Ready to set up a new envelope
+    this.smtp.useEnvelope({
+      from: this.credentials.user,
+      to: [to]
+    });
+  };
+  this.smtp.onready = function(failedRecipients){
+    if(failedRecipients.length){
+      console.log('The following addresses were rejected: ', failedRecipients);
+    }
+    // Ready to send the email
+    client.send("Subject: freedom-social-email message\r\n");
+    client.send("\r\n");
+    client.send(msg);
+    client.end();
+  };
+  this.smtp.ondone = function(success){
+    if (success) {
+      console.log('The message was transmitted successfully with' + response);
+    }
+    continuation();
+  };
 };
 
 
