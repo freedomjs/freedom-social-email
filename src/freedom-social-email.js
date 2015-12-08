@@ -16,7 +16,7 @@ if (typeof global !== 'undefined') {
   }
 }
 
-var EmailSocialProvider = function (dispatchEvent) {
+var EmailSocialProvider = function(dispatchEvent) {
   'use strict';
   this.dispatchEvent = dispatchEvent;
   this.credentials = null;
@@ -51,12 +51,27 @@ EmailSocialProvider.prototype.onCredentials = function(continuation, msg) {
 
 /**
  * Begin the login view, potentially prompting for credentials.
+ * This is expected to be overridden by a *-auth.js file
  * @method login
  * @param {Object} loginOpts Setup information about the desired network.
  */
 EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
+  continuation(undefined, {
+    errcode: 'UNKNOWN',
+    message: 'No login function defined'
+  });
+};
+
+/**
+ * Create SMTP and IMAP clients, and begin connection to the server.
+ * Uses settings from most recent 'login()' call, and from
+ * credentials retrieved from the view.
+ * @method connect
+ * @private
+ * @param {Function} continuation Callback upon connection
+ */
+EmailSocialProvider.prototype.connect = function(continuation) {
   'use strict';
-  console.log(this.credentials);
   this.smtp = new SmtpClient(this.credentials.smtphost, 587, {
     useSecureTransport: true,
     requireTLS: true,

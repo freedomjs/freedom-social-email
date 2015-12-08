@@ -7,11 +7,21 @@
       "browserbox.js",
       "browserbox-imap.js",
       "smtpclient.js",
-      "smtpclient-response-parser.js"
+      "smtpclient-response-parser.js",
+      "email-auth.js"
     ]
   },
   "default": "social",
   "provides": [
     "social"
-  ]
+  ],
+  "permissions": [
+    "core.view"
+  ],
+  "views": {
+    "email-login": {
+      "main": "email-view.html",
+      "files": [ "email-view.js" ]
+    }
+  }
 }
