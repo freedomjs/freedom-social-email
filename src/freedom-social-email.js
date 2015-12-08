@@ -62,7 +62,7 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
     host:     this.credentials.smtphost,
     ssl:      true
   });
-  this.imap = new BrowserBox('localhost', 143, {
+  this.imap = new BrowserBox(this.credentials.imaphost, 143, {
     auth: {
       user: this.credentials.user,
       pass: this.credentials.password

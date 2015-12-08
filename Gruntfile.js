@@ -50,24 +50,23 @@ module.exports = function(grunt) {
       }
     },
 
-    // TODO make client demo
-    /*connect: {
+    connect: {
       demo: {
-      options: {
-      port: 8000,
-      keepalive: true,
-      base: ['./', 'build/'],
-      open: 'http://localhost:8000/build/'
+        options: {
+          port: 8000,
+          keepalive: true,
+          base: ['./', 'build/'],
+          open: 'http://localhost:8000/build/demo/main.html'
+        }
       }
-      }
-      },*/
+    },
 
     clean: ['build/']
   });
 
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  //grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
 
@@ -78,7 +77,7 @@ module.exports = function(grunt) {
   ]);
   grunt.registerTask('demo', [
     'build',
-    //'connect'
+    'connect'
   ]);
   grunt.registerTask('default', [
     'build'
