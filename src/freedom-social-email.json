@@ -4,10 +4,10 @@
   "app": {
     "script": [
       "freedom-social-email.js",
-      "browserbox.js",
       "browserbox-imap.js",
-      "smtpclient.js",
+      "browserbox.js",
       "smtpclient-response-parser.js",
+      "smtpclient.js",
       "email-auth.js"
     ]
   },

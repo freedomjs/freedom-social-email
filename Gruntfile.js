@@ -43,6 +43,16 @@ module.exports = function(grunt) {
       }
     },
 
+    browserify: {
+      compressionWorker: {
+        files: {
+          'build/compressionWorker.js': [
+            path.dirname(require.resolve('browserbox')) +
+              'browserbox-compression-worker.js' ]
+        }
+      }
+    },
+
     jshint: {
       all: ['src/**/*.js', 'spec/**/*.js'],
       options: {
@@ -64,6 +74,7 @@ module.exports = function(grunt) {
     clean: ['build/']
   });
 
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -71,7 +82,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'jshint',
-    'copy'
+    'copy',
+    'browserify'
   ]);
   grunt.registerTask('demo', [
     'build',

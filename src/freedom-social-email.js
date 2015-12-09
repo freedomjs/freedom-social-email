@@ -81,16 +81,19 @@ EmailSocialProvider.prototype.connect = function(continuation) {
       pass: this.credentials.password
     },
   });
-  this.imap = new BrowserBox(this.credentials.imaphost, 143, {
-    auth: {
-      user: this.credentials.user,
-      pass: this.credentials.password
-    },
-    id: {
-      name: 'freedom-social-email IMAP client',
-      version: '0.1.0'
-    }
-  });
+  /*this.imap = new BrowserBox(this.credentials.imaphost, 143, {
+  auth: {
+    user: this.credentials.user,
+    pass: this.credentials.password
+  },
+  id: {
+    name: 'freedom-social-email IMAP client',
+    version: '0.1.0'
+  },
+  options: {
+    compressionWorkerPath: 'compressionWorker.js'
+  }
+   });*/
   if (this.imap) {
     this.imap.connect();
     continuation();
