@@ -12,6 +12,9 @@
  *   network - A string used to differentiate this provider in events.
  */
 EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
+  console.log("FOO?");
+  console.log(this);
+  console.log(this.connect);
   if (loginOpts) {
     this.loginOpts = loginOpts;
   }
@@ -26,9 +29,9 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
     this.view.show('email-login');
     return;
   }
-
+  console.log("BINGO");
   /*  if (!this.client) {
-      this.initializeState();
-      }*/
+   this.initializeState();
+   }*/
   this.connect(continuation);
 };

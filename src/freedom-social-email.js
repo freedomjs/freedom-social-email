@@ -72,6 +72,7 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
  */
 EmailSocialProvider.prototype.connect = function(continuation) {
   'use strict';
+  console.log("BAR");
   this.smtp = new SmtpClient(this.credentials.smtphost, 587, {
     useSecureTransport: true,
     requireTLS: true,
@@ -146,13 +147,13 @@ EmailSocialProvider.prototype.getUsers = function(continuation) {
  * If the destination is not specified or invalid, the mssage is dropped.
  * @method sendMessage
  * @param {String} to clientId of the device or user to send to.
- * @param {String} msg The message to send
+ * @param {String} msg The message to send (first line used as subject)
  * @param {Function} continuation Callback after message is sent.
  */
 EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
   'use strict';
   if (!this.smtp) {
-    this.logger.warn('No client available to send message to ' + to);
+    console.warn('No client available to send message to ' + to);
     continuation(undefined, {
       errcode: 'OFFLINE',
       message: this.ERRCODE.OFFLINE
@@ -177,9 +178,10 @@ EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
       console.log('The following addresses were rejected: ', failedRecipients);
     }
     // Ready to send the email
-    client.send("Subject: freedom-social-email message\r\n");
+    var text = msg.split('\n');
+    client.send(text[0]);
     client.send("\r\n");
-    client.send(msg);
+    client.send(text.slice(1).join('\n'));
     client.end();
   };
   this.smtp.ondone = function(success){

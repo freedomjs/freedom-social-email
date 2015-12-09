@@ -31,36 +31,17 @@
     }
  
     document.getElementById('login').addEventListener('click', function () {
+      email.login().then(success, print);
+    }, true);
+
+    document.getElementById('send').addEventListener('click', function () {
       var text = input.value.split('\n');
-      if (text.length < 2) {
-                        print("Input format should be:\n<user>\n<password>" +
-                        "\n<smtphost>\n<imaphost\n");
+      if (text.length < 3) {
+        print("Input format should be:\n<recipient>\n<subject>\n<body>\n");
       } else {
-        email.login(text[0], text[1]).then(success, print);
+        email.sendMessage(text[0], text.slice(1).join('\n')).then(
+            success, print);
       }
-    }, true);
-
-    document.getElementById('export').addEventListener('click', function () {
-      crypt.exportKey().then(success, print);
-    }, true);
-    document.getElementById('fingerprint').addEventListener('click', function () {
-      crypt.getFingerprint(input.value).then(success, print);
-    }, true);
-
-    document.getElementById('encrypt').addEventListener('click', function () {
-      crypt.signEncrypt(inputBuf(), key.value, false)
-        .then(crypt.armor, print)
-        .then(success, print);
-    }, true);
-    document.getElementById('signencrypt').addEventListener('click', function () {
-      crypt.signEncrypt(inputBuf(), key.value, true)
-        .then(crypt.armor, print)
-        .then(success, print);
-    }, true);
-    document.getElementById('verify').addEventListener('click', function () {
-      crypt.dearmor(input.value).then(function (buf) {
-        return crypt.verifyDecrypt(buf, key.value)
-      }, print).then(decryptSuccess, print);
     }, true);
   };
 
@@ -76,10 +57,12 @@
   <header><span class='triangle'>&#9654;</span> Demos</header>
   <header><span class='triangle'>&#9654;</span> Email</header>
   <section>
-    Input:<br />
-    <textarea id="input" rows=10 cols=80></textarea>
-    <br />
-    <input type="button" id="login" value="Login" />
+    <input type="button" id="login" value="Login" /><br />
+    Freshest message in your inbox:<br />
+    <textarea id="inbox" rows=10 cols=80></textarea><br />
+    Compose a message (first line recipient, second line subject, rest body):<br />
+    <textarea id="input" rows=10 cols=80></textarea><br />
+    <input type="button" id="send" value="Send email" /><br />
   </section>
   <section>
     <h3>Output</h3>
