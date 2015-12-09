@@ -33,7 +33,7 @@ var EmailSocialProvider = function(dispatchEvent) {
 EmailSocialProvider.prototype.onCredentials = function(continuation, msg) {
   'use strict';
   if (msg.cmd && msg.cmd === 'auth') {
-    this.credentials = msg.credentials;
+    this.credentials = msg;
     this.login(null, continuation);
   } else if (msg.cmd && msg.cmd === 'error') {
     continuation(undefined, {
@@ -72,7 +72,6 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
  */
 EmailSocialProvider.prototype.connect = function(continuation) {
   'use strict';
-  console.log("BAR");
   this.smtp = new SmtpClient(this.credentials.smtphost, 587, {
     useSecureTransport: true,
     requireTLS: true,
