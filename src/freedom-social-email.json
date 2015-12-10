@@ -4,6 +4,9 @@
   "app": {
     "script": [
       "freedom-social-email.js",
+      "forge.min.js",
+      "tlsWorker.js",
+      "compressionWorker.js",
       "browserbox-imap.js",
       "browserbox.js",
       "smtpclient-response-parser.js",

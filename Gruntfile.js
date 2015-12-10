@@ -48,7 +48,26 @@ module.exports = function(grunt) {
         files: {
           'build/compressionWorker.js': [
             path.dirname(require.resolve('browserbox')) +
-              'browserbox-compression-worker.js' ]
+              'browserbox-compression-worker.js'
+          ]
+        },
+        options: {
+          browserifyOptions: {
+            standalone: 'Compression'
+          }
+        }
+      },
+      tlsWorker: {
+        files: {
+          'build/tlsWorker.js': [
+            path.dirname(require.resolve('browserbox')) +
+              '../node_modules/tcp-socket/src/tcp-socket-tls-worker.js'
+          ]
+        },
+        options: {
+          browserifyOptions: {
+            standalone: 'TCPSocket'
+          }
         }
       }
     },
@@ -56,7 +75,8 @@ module.exports = function(grunt) {
     jshint: {
       all: ['src/**/*.js', 'spec/**/*.js'],
       options: {
-        jshintrc: true
+        jshintrc: true,
+        ignores: ['src/forge.min.js']
       }
     },
 
