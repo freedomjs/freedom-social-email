@@ -33,7 +33,7 @@ var EmailSocialProvider = function(dispatchEvent) {
 EmailSocialProvider.prototype.onCredentials = function(continuation, msg) {
   'use strict';
   if (msg.cmd && msg.cmd === 'auth') {
-    this.credentials = msg;
+    this.credentials = msg.message;
     this.login(null, continuation);
   } else if (msg.cmd && msg.cmd === 'error') {
     continuation(undefined, {
@@ -82,27 +82,28 @@ EmailSocialProvider.prototype.connect = function(continuation) {
     },
   });
   /*this.imap = new BrowserBox(this.credentials.imaphost, 143, {
-  auth: {
+    auth: {
     user: this.credentials.user,
     pass: this.credentials.password
-  },
-  id: {
+    },
+    id: {
     name: 'freedom-social-email IMAP client',
     version: '0.1.0'
-  },
-  options: {
+    },
+    options: {
     compressionWorkerPath: 'compressionWorker.js'
-  }
-   });*/
-  if (this.imap) {
+    }
+    });
+    if (this.imap) {
     this.imap.connect();
     continuation();
-  } else {
+    } else {
     continuation(undefined, {
-      errcode: 'UNKNOWN',
-      message: 'No login function defined'
+    errcode: 'UNKNOWN',
+    message: 'No login function defined'
     });
-  }
+    }*/
+  continuation();
 };
 
 
@@ -175,18 +176,18 @@ EmailSocialProvider.prototype.sendMessage = function(to, msg, continuation) {
       to: [to]
     });
   };
-  this.smtp.onready = function(failedRecipients){
+  this.smtp.onready = function(failedRecipients) {
     if(failedRecipients.length){
       console.log('The following addresses were rejected: ', failedRecipients);
     }
     // Ready to send the email
     var text = msg.split('\n');
-    client.send(text[0]);
-    client.send("\r\n");
-    client.send(text.slice(1).join('\n'));
-    client.end();
+    this.smtp.send(text[0]);
+    this.smtp.send("\r\n");
+    this.smtp.send(text.slice(1).join('\n'));
+    this.smtp.end();
   };
-  this.smtp.ondone = function(success){
+  this.smtp.ondone = function(success) {
     if (success) {
       console.log('The message was transmitted successfully with' + response);
     }
