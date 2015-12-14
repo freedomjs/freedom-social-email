@@ -72,37 +72,38 @@ EmailSocialProvider.prototype.login = function(loginOpts, continuation) {
  */
 EmailSocialProvider.prototype.connect = function(continuation) {
   'use strict';
-  this.smtp = new SmtpClient(this.credentials.smtphost, 587, {
-    useSecureTransport: true,
-    requireTLS: true,
-    name: 'freedom-social-email SMTP client',
-    auth: {
-      user: this.credentials.user,
-      pass: this.credentials.password
-    },
-  });
+  console.log(SMTPConnection);
+  /*  this.smtp = new SmtpClient(this.credentials.smtphost, 587, {
+   useSecureTransport: true,
+   requireTLS: true,
+   name: 'freedom-social-email SMTP client',
+   auth: {
+   user: this.credentials.user,
+   pass: this.credentials.password
+   },
+   });*/
   /*this.imap = new BrowserBox(this.credentials.imaphost, 143, {
-    auth: {
-    user: this.credentials.user,
-    pass: this.credentials.password
-    },
-    id: {
-    name: 'freedom-social-email IMAP client',
-    version: '0.1.0'
-    },
-    options: {
-    compressionWorkerPath: 'compressionWorker.js'
-    }
-    });
-    if (this.imap) {
-    this.imap.connect();
-    continuation();
-    } else {
-    continuation(undefined, {
-    errcode: 'UNKNOWN',
-    message: 'No login function defined'
-    });
-    }*/
+   auth: {
+   user: this.credentials.user,
+   pass: this.credentials.password
+   },
+   id: {
+   name: 'freedom-social-email IMAP client',
+   version: '0.1.0'
+   },
+   options: {
+   compressionWorkerPath: 'compressionWorker.js'
+   }
+   });
+   if (this.imap) {
+   this.imap.connect();
+   continuation();
+   } else {
+   continuation(undefined, {
+   errcode: 'UNKNOWN',
+   message: 'No login function defined'
+   });
+   }*/
   continuation();
 };
 

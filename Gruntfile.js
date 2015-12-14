@@ -32,18 +32,23 @@ module.exports = function(grunt) {
         dest: 'build/',
         expand: true,
         onlyIf: 'modified'
-      },
-      smtpclient: {
-        cwd: path.dirname(require.resolve('wo-smtpclient')),
-        src: [ 'smtpclient.js',
-               'smtpclient-response-parser.js' ],
-        dest: 'build/',
-        expand: true,
-        onlyIf: 'modified'
       }
     },
 
     browserify: {
+      smtp: {
+        files: {
+          'build/smtp-connection.js': [
+            path.dirname(require.resolve('smtp-connection')) +
+              'src/smtp-connection.js'
+          ]
+        },
+        options: {
+          browserifyOptions: {
+            standalone: 'SMTPConnection'
+          }
+        } 
+      },
       compressionWorker: {
         files: {
           'build/compressionWorker.js': [
@@ -57,19 +62,6 @@ module.exports = function(grunt) {
           }
         }
       },
-      tlsWorker: {
-        files: {
-          'build/tlsWorker.js': [
-            path.dirname(require.resolve('browserbox')) +
-              '../node_modules/tcp-socket/src/tcp-socket-tls-worker.js'
-          ]
-        },
-        options: {
-          browserifyOptions: {
-            standalone: 'TCPSocket'
-          }
-        }
-      }
     },
 
     jshint: {
@@ -113,4 +105,4 @@ module.exports = function(grunt) {
     'build'
   ]);
 
-}
+};

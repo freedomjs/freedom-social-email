@@ -21,6 +21,6 @@
   "dependencies": {
     "browserbox": "^0.9.1",
     "freedom": "^0.6.27",
-    "wo-smtpclient": "^0.6.1"
+    "smtp-connection": "^1.3.1"
   }
 }
