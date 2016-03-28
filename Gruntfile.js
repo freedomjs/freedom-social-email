@@ -7,6 +7,12 @@
 var path = require('path');
 
 module.exports = function(grunt) {
+  require('time-grunt')(grunt);
+  require('jit-grunt')(grunt, {
+    jasmine_node: 'grunt-jasmine-node2',
+    'npm-publish': 'grunt-npm'
+  });
+
   grunt.initConfig({
     copy: {
       build: {
@@ -24,21 +30,14 @@ module.exports = function(grunt) {
         filter: 'isFile',
         expand: true,
         onlyIf: 'modified'
-      },
-      browserbox: {
-        cwd: path.dirname(require.resolve('browserbox')),
-        src: [ 'browserbox.js',
-               'browserbox-imap.js' ],
-        dest: 'build/',
-        expand: true,
-        onlyIf: 'modified'
       }
     },
 
     browserify: {
       emailjs: {
         files: {
-          'build/emailjs.js': [ require.resolve('emailjs') ]
+          'build/emailjs-imap.js': [ require.resolve('emailjs-imap-client') ],
+          'build/emailjs-smtp.js': [ require.resolve('emailjs-smtp-client') ]
         }
       }
     },
@@ -64,12 +63,6 @@ module.exports = function(grunt) {
 
     clean: ['build/']
   });
-
-  grunt.loadNpmTasks('grunt-browserify');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  //grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   grunt.registerTask('build', [
     'jshint',

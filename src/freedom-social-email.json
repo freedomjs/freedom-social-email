@@ -4,9 +4,8 @@
   "app": {
     "script": [
       "freedom-social-email.js",
-      "browserbox.js",
-      "browserbox-imap.js",
-      "emailjs.js"
+      "emailjs-imap.js",
+      "emailjs-smtp.js"
     ]
   },
   "default": "social",
