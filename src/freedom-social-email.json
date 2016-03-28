@@ -3,13 +3,25 @@
   "description": "Email social provider for freedom.js",
   "app": {
     "script": [
-      "freedom-social-email.js",
+      "forge.min.js",
       "emailjs-imap.js",
-      "emailjs-smtp.js"
+      "emailjs-smtp.js",
+      "freedom-social-email.js",
+      "email-auth.js"
     ]
   },
   "default": "social",
   "provides": [
     "social"
-  ]
+  ],
+  "permissions": [
+    "core.tcpsocket",
+    "core.view"
+  ],
+  "views": {
+    "email-login": {
+      "main": "email-view.html",
+      "files": [ "email-view.js" ]
+    }
+  }
 }
