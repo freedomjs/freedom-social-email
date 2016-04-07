@@ -82,7 +82,7 @@ EmailSocialProvider.prototype.connect = function(continuation) {
    pass: this.credentials.password
    },
    });*/
-  /*this.imap = new BrowserBox(this.credentials.imaphost, 143, {
+  /*this.imap = new ImapClient(this.credentials.imaphost, 143, {
    auth: {
    user: this.credentials.user,
    pass: this.credentials.password

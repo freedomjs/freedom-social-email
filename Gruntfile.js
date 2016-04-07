@@ -33,12 +33,26 @@ module.exports = function(grunt) {
     },
 
     browserify: {
-      smtp: {
+      emailjsImap: {
         files: {
-          'build/emailjs-imap.js': [ require.resolve('emailjs-imap-client') ],
-          'build/emailjs-smtp.js': [ require.resolve('emailjs-smtp-client') ]
+          'build/emailjs-imap.js': [ require.resolve('emailjs-imap-client') ]
+        },
+        options: {
+          browserifyOptions: {
+            standalone: 'ImapClient'
+          }
         }
       },
+      emailjsSmtp: {
+        files: {
+          'build/emailjs-smtp.js': [ require.resolve('emailjs-smtp-client') ]
+        },
+        options: {
+          browserifyOptions: {
+            standalone: 'SmtpClient'
+          }
+        }
+      }
     },
 
     jshint: {
